@@ -40,12 +40,16 @@ if __name__ == "__main__":
         print("""Compound should be used with syntax thus:
     python(3) main.py <CHTML file> [any optional parameters (see docs)]""")
     else:
+        output = ".".join(sys.argv[1].split(".")[:-2]) + ".html"
+        if "-o" in sys.argv:
+            output = sys.argv[sys.argv.index("-o") + 1]
+        elif "--output" in sys.argv:
+            output = sys.argv[sys.argv.index("--output") + 1]
         try:
             if(".c.html" not in sys.argv[1]):
                 print("WARNING: CHTML input file does not contain '.c.html' in its name; are you sure that it's the correct format?")
             chtml = bs4.BeautifulSoup(open(sys.argv[1]), "html.parser")
             transcludes = chtml.find_all("link", rel="transclusion")
-            print(transcludes)
             for transclusion in transcludes:
                 try:
                     transclusion.replaceWith(bs4.BeautifulSoup(open(transclusion["href"])))
@@ -54,11 +58,17 @@ if __name__ == "__main__":
                     del transclusion
                 except Exception as e:
                     print("Transclusion failure:", e)
-            print(chtml)
+
             if minify:
                 chtml = htmlmin.minify(str(chtml), remove_empty_space=True, remove_comments=nocomm)
-                print(chtml)
+
                 # TODO: if minify flag set, and -d (deep) flag is set, then also transclude JS and CSS files into the base HTML file. (we really don't like external references ;))
+
+            # save the new file
+            f = open(output, "w")
+            f.write(chtml)
+            f.close()
+            print("SUCCESS: Compiled to %s!" % output)
         except IOError as e:
             print("File %s could not be found -- are you sure you spelt it right?" % sys.argv[1])
         except Exception as e:
