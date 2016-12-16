@@ -1,0 +1,2 @@
+- beautifulsoup4; pip(3) install beautifulsoup4
+- htmlmin; pip(3) install htmlmin (optional; only for minification)
