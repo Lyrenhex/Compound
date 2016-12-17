@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
             # save the new file
             f = open(output, "w")
-            f.write(chtml)
+            f.write(str(chtml))
             f.close()
             print("SUCCESS: Compiled to %s!" % output)
         except IOError as e:
