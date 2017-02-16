@@ -30,7 +30,8 @@ if "-m" in sys.argv or "--minify" in sys.argv:
         import htmlmin
         minify = True
     except ImportError as e:
-        print("Minifying the output HTML requires the htmlmin module. Try run `pip3 install htmlmin` or `pip install htmlmin`.")
+        print("Minifying the output HTML requires the htmlmin module. \
+Try run `pip3 install htmlmin` or `pip install htmlmin`.")
 
 if "-c" in sys.argv or "--no-comments" in sys.argv:
     if minify:
@@ -47,10 +48,12 @@ if __name__ == "__main__":
         if ".c.html" in sys.argv[1]:
             files[0] = sys.argv[1]
         else:
-            print("WARNING: CHTML input file does not contain '.c.html' in its name; are you sure that it's the correct format?")
+            print("WARNING: CHTML input file does not contain '.c.html' in its \
+name; are you sure that it's the correct format?")
             # no .c.html;  user likely specified a directory to build
             if os.path.isdir(sys.argv[1]):
-                # it is a dir; we should go through the files and compile them all.
+                # it is a dir; we should go through the files and compile them
+                # all.
                 for f in os.listdir(sys.argv[1]):
                     if os.path.isfile(os.path.join(sys.argv[1], f)):
                         files.append(os.path.join(sys.argv[1], f))
@@ -76,9 +79,11 @@ if __name__ == "__main__":
 
                 for transclusion in transcludes:
                     try:
-                        transclusion.replaceWith(bs4.BeautifulSoup(open(transclusion["href"]), "html.parser"))
+                        transclusion.replaceWith(bs4.BeautifulSoup(
+                            open(transclusion["href"]), "html.parser"))
                     except IOError as e:
-                        print("Transclusion failure: file %s could not be found -- perhaps it's misspelt?" % transclusion["href"])
+                        print("Transclusion failure: file %s could not be found\
+ -- perhaps it's misspelt?" % transclusion["href"])
                         del transclusion
                     except Exception as e:
                         print("Transclusion failure:", e)
@@ -90,7 +95,8 @@ if __name__ == "__main__":
                         csstag = chtml.new_tag("style")
 
                         # fill the <style> tag with the css
-                        csstag.append(bs4.BeautifulSoup(open(cssfile["href"]), "html.parser"))
+                        csstag.append(bs4.BeautifulSoup(open(cssfile["href"]),
+                            "html.parser"))
 
                         # replace the link tag with the <style> tag
                         cssfile.replaceWith(csstag)
@@ -102,15 +108,19 @@ if __name__ == "__main__":
                         scripttag = chtml.new_tag("script")
 
                         # fill the <script> tag with the js
-                        scripttag.append(bs4.BeautifulSoup(open(scriptfile["src"]), "html.parser"))
+                        scripttag.append(bs4.BeautifulSoup(
+                            open(scriptfile["src"]), "html.parser"))
 
                         # replace the link tag with the <script> tag
                         scriptfile.replaceWith(scripttag)
 
                 if minify:
-                    chtml = htmlmin.minify(str(chtml), remove_empty_space=True, remove_comments=nocomm)
+                    chtml = htmlmin.minify(str(chtml), remove_empty_space=True,
+                        remove_comments=nocomm)
 
-                    # TODO: if minify flag set, and -d (deep) flag is set, then also transclude JS and CSS files into the base HTML file. (we really don't like external references ;))
+                    # TODO: if minify flag set, and -d (deep) flag is set, then 
+                    # also transclude JS and CSS files into the base HTML file.
+                    # (we really don't like external references ;))
 
                 # save the new file
                 f = open(output, "w")
@@ -118,6 +128,8 @@ if __name__ == "__main__":
                 f.close()
                 print("SUCCESS: Compiled to %s!" % output)
             except IOError as e:
-                print("File %s could not be found -- are you sure you spelt it right?" % f)
+                print("File %s could not be found -- are you sure you spelt it \
+right?" % f)
             except Exception as e:
-                print("Whoops, we couldn't compile the CHTML file. See error:", e)
+                print("Whoops, we couldn't compile the CHTML file. See error:",
+                    e)
