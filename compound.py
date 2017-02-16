@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Compound HTML Transclusion Compiler
 Copyright (C) 2016  Damian Heaton <dh64784@gmail.com>
@@ -40,7 +41,7 @@ if "-c" in sys.argv or "--no-comments" in sys.argv:
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("""Compound should be used with syntax thus:
-    python(3) main.py <CHTML file> [any optional parameters (see docs)]""")
+    compound <CHTML file> [any optional parameters (see docs)]""")
     else:
         files = []
         if ".c.html" in sys.argv[1]:
@@ -82,9 +83,7 @@ if __name__ == "__main__":
                     except Exception as e:
                         print("Transclusion failure:", e)
 
-                if "-v" in sys.argv or "--verbose" in sys.argv:
-                    # they passed the verbose flag; embed script and css files
-
+                if "--css" in sys.argv:
                     # css files
                     for cssfile in csslinks:
                         # create a new <style> tag to contain embedded css
@@ -96,6 +95,7 @@ if __name__ == "__main__":
                         # replace the link tag with the <style> tag
                         cssfile.replaceWith(csstag)
 
+                if "--js" in sys.argv:
                     # script files
                     for scriptfile in scriptlinks:
                         # create a new <script> tag to contain embedded js
